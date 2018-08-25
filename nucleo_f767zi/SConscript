@@ -1,0 +1,12 @@
+Import("env")
+
+env.InstallAs("$PKGROOT/ldscript.ld", "ldscript/stm32_f767zi.ld")
+
+env.ExportFiles(env.Glob("cmsis/*.h") +
+                env.Glob("startup/*.h"), "$PKGROOT/include")
+
+env.Append(CPPPATH=[env.Dir("$PKGROOT/include")])
+
+startup = env.SConscript(dirs="startup")
+board = env.Library("board", startup)
+Return("board")
