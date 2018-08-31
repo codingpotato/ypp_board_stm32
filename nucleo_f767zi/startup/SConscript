@@ -1,4 +1,0 @@
-Import("env")
-
-objs = env.Objects(env.Glob("*.s") + env.Glob("*.c"))
-Return("objs")

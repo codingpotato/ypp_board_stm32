@@ -1,12 +1,31 @@
 Import("env")
 
-env.InstallAs("$PKGROOT/ldscript.ld", "ldscript/stm32_f767zi.ld")
+if env.get("YPP_AUTO_COMPILER", True):
+    env.Replace(PREFIX="arm-none-eabi-",
+                CC="${PREFIX}gcc", CXX="${PREFIX}g++",
+                AR="${PREFIX}ar", RANLIB="${PREFIX}ranlib")
 
-env.ExportFiles(env.Glob("cmsis/*.h") +
-                env.Glob("startup/*.h"), "$PKGROOT/include")
+    flags = ["-mcpu=cortex-m7", "-mthumb", "-mfloat-abi=soft"]
+    env.Append(CCFLAGS=flags + ["-ffunction-sections", "-fdata-sections", "-g"],
+               LINKFLAGS=flags + ["--specs=nano.specs", "-Wl,--gc-sections"])
+
+ldscript = env.ExportFiles("cortexm.ld")
+
+
+def _ypp_main_program_impl(env, *args, **kwargs):
+    program = env.MainProgram(
+        *args, LINKFLAGS=["$LINKFLAGS", "-T"] + ldscript, **kwargs)
+    env.Depends(program, ldscript)
+    return program
+
+
+env.AddMethod(_ypp_main_program_impl, "YPPMainProgram")
+
+
+env.ExportFiles(env.Glob("*.h"),
+                "$PKGROOT/include/ypp/board")
 
 env.Append(CPPPATH=[env.Dir("$PKGROOT/include")])
 
-startup = env.SConscript(dirs="startup")
-board = env.Library("board", startup)
-Return("board")
+objs = env.Objects(env.Glob("*.c") + env.Glob("*.cpp"))
+Return("objs")
