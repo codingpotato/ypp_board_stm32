@@ -5,9 +5,9 @@ if env.get("YPP_AUTO_COMPILER", True):
                 CC="${PREFIX}gcc", CXX="${PREFIX}g++",
                 AR="${PREFIX}ar", RANLIB="${PREFIX}ranlib")
 
-    flags = ["-mcpu=cortex-m7", "-mthumb", "-mfloat-abi=soft"]
-    env.Append(CCFLAGS=flags + ["-ffunction-sections", "-fdata-sections", "-g"],
-               LINKFLAGS=flags + ["--specs=nano.specs", "-Wl,--gc-sections"])
+flags = ["-mcpu=cortex-m7", "-mthumb", "-mfloat-abi=soft"]
+env.Append(CCFLAGS=flags + ["-ffunction-sections", "-fdata-sections", "-g"],
+           LINKFLAGS=flags + ["-Wl,--gc-sections", "--specs=nano.specs"])
 
 ldscript = env.ExportFiles("cortexm.ld")
 

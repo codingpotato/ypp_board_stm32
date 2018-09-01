@@ -1,6 +1,8 @@
 Import("env")
 
-env.Load("ypp", "../ypp")
+ypp = env.Load("ypp", "../ypp")
 
 board = env.SelectBoard("ypp_board_stm32")
-Return("board")
+
+libboard = board + ypp
+Return("libboard")
