@@ -1,21 +1,23 @@
 Import("env")
 
 if env.get("YPP_AUTO_COMPILER", True):
-    env.Replace(PREFIX="arm-none-eabi-",
-                CC="${PREFIX}gcc", CXX="${PREFIX}g++",
-                AR="${PREFIX}ar", RANLIB="${PREFIX}ranlib")
+    env.Replace(PREFIX="arm-none-eabi-", CC="${PREFIX}gcc", CXX="${PREFIX}g++",
+                AR="${PREFIX}ar", RANLIB="${PREFIX}ranlib", SIZE="${PREFIX}size")
 
 flags = ["-mcpu=cortex-m7", "-mthumb", "-mfloat-abi=soft"]
 env.Append(CCFLAGS=flags + ["-ffunction-sections", "-fdata-sections", "-g"],
            LINKFLAGS=flags + ["-Wl,--gc-sections", "--specs=nano.specs"])
 
-ldscript = env.ExportFiles("cortexm.ld")
+ldscript = env.File("cortexm.ld")
 
 
 def _ypp_main_program_impl(env, *args, **kwargs):
     program = env.MainProgram(
-        *args, LINKFLAGS=["$LINKFLAGS", "-T"] + ldscript, **kwargs)
+        *args, LINKFLAGS=["$LINKFLAGS", "-T", ldscript], **kwargs)
     env.Depends(program, ldscript)
+
+    show_size = env.Alias("show_size", program, "$SIZE $SOURCE")
+    env.Default(show_size)
     return program
 
 
