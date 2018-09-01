@@ -7,5 +7,6 @@ env.ExportFiles(env.Glob("hal/include/Legacy/*.h"),
                 "$PKGROOT/include/vendor/Legacy")
 
 objs = env.Objects(env.Glob("hal/src/*.c", exclude="hal/src/*_template.c") +
-                   env.Glob("hal/src/**/*.c") + env.Glob("bsp/src/**/*.c"))
-Return("objs")
+                   env.Glob("hal/src/**/*.c") + env.Glob("bsp/src/*.c"))
+vendor = env.Library("board_vendor", objs)
+Return("vendor")
