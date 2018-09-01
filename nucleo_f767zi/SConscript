@@ -24,7 +24,6 @@ def _ypp_main_program_impl(env, *args, **kwargs):
 env.AddMethod(_ypp_main_program_impl, "YPPMainProgram")
 
 env.Append(CPPPATH=[env.Dir("$PKGROOT/include/vendor")])
-print(env["CPPPATH"])
 
 vendor = env.SConscript(dirs="vendor")
 system = env.SConscript(dirs="system")

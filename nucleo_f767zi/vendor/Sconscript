@@ -1,12 +1,10 @@
 Import("env")
 
-env.ExportFiles(env.Glob("bsp/include/*.h"), "$PKGROOT/include/vendor")
-env.ExportFiles(env.Glob("cmsis/include/*.h"), "$PKGROOT/include/vendor")
-env.ExportFiles(env.Glob("hal/include/*.h"), "$PKGROOT/include/vendor")
-env.ExportFiles(env.Glob("hal/include/Legacy/*.h"),
-                "$PKGROOT/include/vendor/Legacy")
+env.ExportDir("bsp/include", "$PKGROOT/include/vendor", files="*.h")
+env.ExportDir("cmsis/include", "$PKGROOT/include/vendor", files="*.h")
+env.ExportDir("hal/include", "$PKGROOT/include/vendor", files="*.h")
 
-objs = env.Objects(env.Glob("hal/src/*.c", exclude="hal/src/*_template.c") +
-                   env.Glob("hal/src/**/*.c") + env.Glob("bsp/src/*.c"))
+objs = env.Objects(env.RecGlob("hal/src", "*.c", exclude=["hal/src/*_template.c"])
+                   + env.RecGlob("bsp/src", "*.c"))
 vendor = env.Library("board_vendor", objs)
 Return("vendor")
