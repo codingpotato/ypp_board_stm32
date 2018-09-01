@@ -2,13 +2,13 @@ Import("env")
 
 if env.get("YPP_AUTO_COMPILER", True):
     env.Replace(PREFIX="arm-none-eabi-", CC="${PREFIX}gcc", CXX="${PREFIX}g++",
-                AR="${PREFIX}ar", RANLIB="${PREFIX}ranlib", SIZE="${PREFIX}size")
+                AS="${PREFIX}as", AR="${PREFIX}ar", RANLIB="${PREFIX}ranlib", SIZE="${PREFIX}size")
 
-flags = ["-mcpu=cortex-m7", "-mthumb", "-mfloat-abi=soft"]
+flags = ["-mcpu=cortex-m7", "-mthumb", "-mfloat-abi=soft", "-DSTM32F767xx"]
 env.Append(CCFLAGS=flags + ["-ffunction-sections", "-fdata-sections", "-g"],
            LINKFLAGS=flags + ["-Wl,--gc-sections", "--specs=nano.specs"])
 
-ldscript = env.File("cortexm.ld")
+ldscript = env.File("system/stm32f767zi.ld")
 
 
 def _ypp_main_program_impl(env, *args, **kwargs):
@@ -23,11 +23,10 @@ def _ypp_main_program_impl(env, *args, **kwargs):
 
 env.AddMethod(_ypp_main_program_impl, "YPPMainProgram")
 
+env.Append(CPPPATH=[env.Dir("$PKGROOT/include/vendor")])
+print(env["CPPPATH"])
 
-env.ExportFiles(env.Glob("*.h"),
-                "$PKGROOT/include/ypp/board")
-
-env.Append(CPPPATH=[env.Dir("$PKGROOT/include")])
-
-objs = env.Objects(env.Glob("*.c") + env.Glob("*.cpp"))
-Return("objs")
+system = env.SConscript(dirs="system")
+vendor = env.SConscript(dirs="vendor")
+libs = system + vendor
+Return("libs")

@@ -1,0 +1,11 @@
+Import("env")
+
+env.ExportFiles(env.Glob("bsp/include/*.h"), "$PKGROOT/include/vendor")
+env.ExportFiles(env.Glob("cmsis/include/*.h"), "$PKGROOT/include/vendor")
+env.ExportFiles(env.Glob("hal/include/*.h"), "$PKGROOT/include/vendor")
+env.ExportFiles(env.Glob("hal/include/Legacy/*.h"),
+                "$PKGROOT/include/vendor/Legacy")
+
+objs = env.Objects(env.Glob("hal/src/*.c", exclude="hal/src/*_template.c") +
+                   env.Glob("hal/src/**/*.c") + env.Glob("bsp/src/**/*.c"))
+Return("objs")
