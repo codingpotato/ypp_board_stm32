@@ -6,7 +6,7 @@ if env.get("YPP_AUTO_COMPILER", True):
 
 flags = ["-mcpu=cortex-m7", "-mthumb", "-mfloat-abi=soft", "-DSTM32F767xx"]
 env.Append(CCFLAGS=flags + ["-ffunction-sections", "-fdata-sections", "-g"],
-           LINKFLAGS=flags + ["-Wl,--gc-sections", "--specs=nano.specs"])
+           LINKFLAGS=flags + ["-Wl,--gc-sections", "--specs=nano.specs", "--specs=nosys.specs"])
 
 ldscript = env.File("system/stm32f767zi.ld")
 
@@ -26,7 +26,8 @@ env.AddMethod(_ypp_main_program_impl, "YPPMainProgram")
 env.Append(CPPPATH=[env.Dir("$PKGROOT/include/vendor")])
 print(env["CPPPATH"])
 
-system = env.SConscript(dirs="system")
 vendor = env.SConscript(dirs="vendor")
-libs = system + vendor
+system = env.SConscript(dirs="system")
+drivers = env.SConscript(dirs="drivers")
+libs = drivers + system + vendor
 Return("libs")

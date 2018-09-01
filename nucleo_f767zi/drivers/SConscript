@@ -1,0 +1,6 @@
+Import("env")
+
+env.ExportFiles(env.Glob("*.h"), "$PKGROOT/include/vendor")
+
+objs = env.Objects(env.Glob("*.c"))
+Return("objs")
