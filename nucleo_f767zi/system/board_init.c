@@ -1,5 +1,7 @@
+#include "gpio.h"
 #include "stm32f7xx_hal.h"
 #include "stm32f7xx_nucleo_144.h"
+#include "uart.h"
 
 /**
  * @brief  System Clock Configuration
@@ -100,18 +102,8 @@ void board_init() {
   /* Configure the system clock to 216 MHz */
   SystemClock_Config();
 
-  /* -1- Enable GPIO Clock (to be able to program the configuration registers)
-   */
-  __HAL_RCC_GPIOB_CLK_ENABLE();
-
-  /* -2- Configure IO in output push-pull mode to drive external LEDs */
-  GPIO_InitTypeDef GPIO_InitStruct;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-
-  GPIO_InitStruct.Pin = GPIO_PIN_0;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  gpio_init();
+  uart_init();
 }
 
 #ifdef USE_FULL_ASSERT

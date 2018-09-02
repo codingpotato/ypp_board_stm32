@@ -1,11 +1,12 @@
 #include <sys/types.h>
+#include "uart.h"
 
 int _read(int file, char *ptr, int len) {
   return len;
 }
 
 int _write(int file, char *ptr, int len) {
-  return len;
+  return uart_write(ptr, len);
 }
 
 /*void _exit(int status) {}

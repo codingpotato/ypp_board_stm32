@@ -5,7 +5,11 @@
 extern "C" {
 #endif
 
-void gpio_toggle_led0();
+void gpio_init();
+
+void gpio_toggle_led(int id);
+
+void gpio_set_led(int id);
 
 void sleep(int ms);
 

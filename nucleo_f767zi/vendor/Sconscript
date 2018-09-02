@@ -6,4 +6,5 @@ env.ExportDir("hal/include", "$PKGROOT/include/vendor", files="*.h")
 
 objs = env.Objects(env.RecGlob("hal/src", "*.c", exclude=["hal/src/*_template.c"])
                    + env.RecGlob("bsp/src", "*.c"))
-Return("objs")
+vendor = env.Library("board_vendor", objs)
+Return("vendor")
