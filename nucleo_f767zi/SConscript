@@ -4,8 +4,8 @@ if env.get("YPP_AUTO_COMPILER", True):
     env.Replace(PREFIX="arm-none-eabi-", CC="${PREFIX}gcc", CXX="${PREFIX}g++",
                 AS="${PREFIX}as", AR="${PREFIX}ar", RANLIB="${PREFIX}ranlib", SIZE="${PREFIX}size")
 
-flags = ["-mcpu=cortex-m7", "-mthumb", "-mfloat-abi=soft", "-DSTM32F767xx"]
-env.Append(CCFLAGS=flags + ["-ffunction-sections", "-fdata-sections", "-g"],
+flags = ["-mcpu=cortex-m7", "-mthumb", "-mfloat-abi=hard", "-mfpu=fpv5-sp-d16"]
+env.Append(CCFLAGS=flags + ["-DSTM32F767xx", "-ffunction-sections", "-fdata-sections", "-g"],
            LINKFLAGS=flags + ["-Wl,--gc-sections", "--specs=nano.specs", "--specs=nosys.specs"])
 
 ldscript = env.File("system/stm32f767zi.ld")
