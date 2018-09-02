@@ -18,6 +18,7 @@ def _ypp_main_program_impl(env, *args, **kwargs):
 
     show_size = env.Alias("show_size", program, "$SIZE $SOURCE")
     env.Default(show_size)
+    env.AlwaysBuild(show_size)
     return program
 
 
