@@ -27,13 +27,13 @@ void gpio_toggle_led(int id) {
 void gpio_set_led(int id) {
   switch (id) {
   case 0:
-    BSP_LED_ON(LED1);
+    BSP_LED_On(LED1);
     break;
   case 1:
-    BSP_LED_ON(LED2);
+    BSP_LED_On(LED2);
     break;
   case 2:
-    BSP_LED_ON(LED3);
+    BSP_LED_On(LED3);
     break;
   default:
     break;
