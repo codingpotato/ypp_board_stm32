@@ -1,6 +1,7 @@
 Import("env")
 
 env.ExportFiles(env.Glob("*.h"), "$PKGROOT/include/vendor")
+env.ExportFiles("config.h", "$PKGROOT/include/ypp/board/")
 
 objs = env.Objects(env.Glob("*.c") + env.Glob("*.S"))
 Return("objs")

@@ -2,7 +2,7 @@ Import("env")
 
 if env.get("YPP_AUTO_COMPILER", True):
     env.Replace(PREFIX="arm-none-eabi-", CC="${PREFIX}gcc", CXX="${PREFIX}g++",
-                AS="${PREFIX}as", AR="${PREFIX}ar", RANLIB="${PREFIX}ranlib", SIZE="${PREFIX}size")
+                AS="${PREFIX}as", AR="${PREFIX}gcc-ar", RANLIB="${PREFIX}gcc-ranlib", SIZE="${PREFIX}size")
 
 flags = ["-mcpu=cortex-m7", "-mthumb", "-mfloat-abi=hard", "-mfpu=fpv5-sp-d16"]
 env.Append(CCFLAGS=flags + ["-DSTM32F767xx", "-ffunction-sections", "-fdata-sections", "-g"],
@@ -24,10 +24,14 @@ def _ypp_main_program_impl(env, *args, **kwargs):
 
 env.AddMethod(_ypp_main_program_impl, "YPPMainProgram")
 
-env.Append(CPPPATH=[env.Dir("$PKGROOT/include/vendor")])
+env.Append(CPPPATH=[env.Dir("$PKGROOT/include/"),
+                    env.Dir("$PKGROOT/include/vendor")])
 
 vendor = env.SConscript(dirs="vendor")
+
 system = env.SConscript(dirs="system")
 drivers = env.SConscript(dirs="drivers")
-libs = drivers + system + vendor
+board = env.Library("board", drivers + system)
+
+libs = board + vendor
 Return("libs")
