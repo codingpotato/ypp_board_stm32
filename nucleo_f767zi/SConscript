@@ -31,7 +31,6 @@ vendor = env.SConscript(dirs="vendor")
 
 system = env.SConscript(dirs="system")
 drivers = env.SConscript(dirs="drivers")
-board = env.Library("board", drivers + system)
 
-libs = board + vendor
+libs = system + drivers + vendor
 Return("libs")
